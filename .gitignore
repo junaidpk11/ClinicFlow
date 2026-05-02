@@ -1,0 +1,25 @@
+# Java / Maven
+target/
+*.class
+*.jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring
+application-local.yml
+application-local.properties
+
+# Node / Next.js
+node_modules/
+.next/
+frontend/.next/
+frontend/node_modules/
+*.tsbuildinfo
+
+# Secrets — NEVER commit these
+.env
+.env.local
+.env.production
+
+# macOS
+.DS_Store
+**/.DS_Store
