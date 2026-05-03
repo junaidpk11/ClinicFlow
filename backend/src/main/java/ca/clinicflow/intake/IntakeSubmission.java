@@ -16,6 +16,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "intake_submission")
 public class IntakeSubmission {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -44,13 +45,18 @@ public class IntakeSubmission {
     @Column(nullable = false, columnDefinition = "jsonb")
     private Map<String, Object> responses;
 
+    @Column(name = "submitted_from_ip", columnDefinition = "inet")
+    private String submittedFromIp;
+
+    @Column(name = "user_agent")
+    private String userAgent;
+
     @Column(name = "submitted_at", nullable = false)
     private OffsetDateTime submittedAt;
 
     @PrePersist
     void prePersist() {
-        if (submittedAt == null) {
-            submittedAt = OffsetDateTime.now();
-        }
+        if (submittedAt == null) submittedAt = OffsetDateTime.now();
     }
 }
+

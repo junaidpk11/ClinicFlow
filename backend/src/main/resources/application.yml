@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/clinicflow
-    username: clinicflow
-    password: clinicflow
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/clinicflow}
+    username: ${DB_USER:clinicflow}
+    password: ${DB_PASS:clinicflow}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -13,11 +13,18 @@ spring:
           time_zone: UTC
   flyway:
     enabled: true
+  # Async support for AuditService
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 8
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 clinicflow:
   jwt:
-    secret: "change-me-in-production-must-be-at-least-32-chars-long"
-    expiry-hours: 24
+    secret: ${JWT_SECRET:change-me-in-production-must-be-at-least-32-chars-long!!}
+    expiry-hours: ${JWT_EXPIRY_HOURS:24}
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}

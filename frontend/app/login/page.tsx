@@ -2,12 +2,13 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { apiPost, saveToken } from '@/lib/api';
+import { apiPost, saveToken, saveClinicName } from '@/lib/api';
 
 interface LoginResponse {
   token: string;
   email: string;
   clinicId: string;
+  clinicName: string;
 }
 
 export default function LoginPage() {
@@ -27,6 +28,7 @@ export default function LoginPage() {
         password: data.get('password'),
       });
       saveToken(res.token);
+      saveClinicName(res.clinicName);
       router.push('/dashboard');
     } catch {
       setError('Invalid email or password.');

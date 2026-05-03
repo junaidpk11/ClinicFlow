@@ -33,14 +33,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
-                Claims claims = jwtService.verify(token);
-                UUID clinicId = jwtService.extractClinicId(claims);
-                ClinicPrincipal principal = new ClinicPrincipal(clinicId, claims.getSubject());
+                Claims claims  = jwtService.verify(token);
+                UUID clinicId  = jwtService.extractClinicId(claims);
+                UUID userId    = jwtService.extractUserId(claims);
+                String email   = claims.getSubject();
+
+                ClinicPrincipal principal = new ClinicPrincipal(clinicId, userId, email);
                 var auth = new UsernamePasswordAuthenticationToken(
                         principal, null, List.of(new SimpleGrantedAuthority("ROLE_STAFF")));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (JwtException ignored) {
-                // Invalid token → request proceeds unauthenticated; Spring Security will 401 protected routes
+                // Invalid token — request proceeds unauthenticated
             }
         }
         filterChain.doFilter(request, response);

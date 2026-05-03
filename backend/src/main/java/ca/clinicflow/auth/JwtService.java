@@ -24,18 +24,18 @@ public class JwtService {
         this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    public String issue(UUID clinicId, String email) {
+    public String issue(UUID clinicId, UUID userId, String email) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(email)
                 .claim("clinicId", clinicId.toString())
+                .claim("userId",   userId.toString())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(props.getExpiryHours(), ChronoUnit.HOURS)))
                 .signWith(key)
                 .compact();
     }
 
-    /** Returns claims or throws JwtException if invalid / expired. */
     public Claims verify(String token) {
         return Jwts.parser()
                 .verifyWith(key)
@@ -46,5 +46,9 @@ public class JwtService {
 
     public UUID extractClinicId(Claims claims) {
         return UUID.fromString(claims.get("clinicId", String.class));
+    }
+
+    public UUID extractUserId(Claims claims) {
+        return UUID.fromString(claims.get("userId", String.class));
     }
 }
